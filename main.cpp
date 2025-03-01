@@ -122,6 +122,31 @@ public:
 
     // * DELETE COURSE
 
+    void deleteCourse(int courseId){
+        if(searchCourses(courseId)){
+            Courses* existCourse = searchCourses(courseId);
+            Student* allStudent = existCourse->studentList;
+            Student* temp  = studHead;
+            while(temp != NULL){
+                Student* prev = temp;
+                temp->nextStudent=NULL;
+                temp=temp->nextStudent;
+                delete prev;
+            }
+            return; 
+        }else{
+            cout<<"No Course Exist Recently";
+            return;
+        }
+    }
+
+
+    // * DELETE STUDENT FROM A COURSE
+
+    void deleteStudent (){
+
+    }
+
 };
 
 int main() {
@@ -136,7 +161,9 @@ int main() {
     uniLL.addNewStudent("B23110006007",351);
     uniLL.addNewStudent("B23110006008",351);
 
-    // uniLL.printStudent(353);
+    // uniLL.printStudent(351);
+
+    uniLL.deleteCourse(351);
 
     return 0;
 }
