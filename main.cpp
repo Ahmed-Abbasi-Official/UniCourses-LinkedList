@@ -136,7 +136,7 @@ int main() {
     uniLL.addNewStudent("B23110006007",351);
     uniLL.addNewStudent("B23110006008",351);
 
-    uniLL.printStudent(353);
+    // uniLL.printStudent(353);
 
     return 0;
 }
