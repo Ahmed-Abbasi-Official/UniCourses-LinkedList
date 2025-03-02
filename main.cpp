@@ -191,22 +191,53 @@ public:
 
 int main() {
     UNICourseList uniLL;
-
-    uniLL.addNewCourse(351);
-    uniLL.addNewCourse(352);
-    uniLL.addNewCourse(353);  
-
+    int choice, courseId;
+    string studentId;
     
-
-    uniLL.addNewStudent("B23110006007",351);
-    uniLL.addNewStudent("B23110006008",351);
-
-    uniLL.deleteStudentFromAllCourses("B23110006007");
-
-    uniLL.printStudent(351);
-    // uniLL.deleteCourse(352);
-    uniLL.printAllCourses();  
-
-
+    while (true) {
+        cout << "\nUniversity System Menu:";
+        cout << "\n1. Add Course";
+        cout << "\n2. Add Student";
+        cout << "\n3. Delete Student from All Courses";
+        cout << "\n4. Print Students in a Course";
+        cout << "\n5. Print All Courses";
+        cout << "\n6. Exit";
+        cout << "\nEnter your choice: ";
+        cin >> choice;
+        
+        switch (choice) {
+            case 1:
+                cout << "Enter course ID: ";
+                cin >> courseId;
+                uniLL.addNewCourse(courseId);
+                break;
+            case 2:
+                cout << "Enter student ID: ";
+                cin >> studentId;
+                cout << "Enter course ID: ";
+                cin >> courseId;
+                uniLL.addNewStudent(studentId, courseId);
+                break;
+            case 3:
+                cout << "Enter student ID to delete: ";
+                cin >> studentId;
+                uniLL.deleteStudentFromAllCourses(studentId);
+                break;
+            case 4:
+                cout << "Enter course ID: ";
+                cin >> courseId;
+                uniLL.printStudent(courseId);
+                break;
+            case 5:
+                uniLL.printAllCourses();
+                break;
+            case 6:
+                cout << "Exiting program...\n";
+                return 0;
+            default:
+                cout << "Invalid choice, please try again!\n";
+        }
+    }
     return 0;
 }
+
