@@ -68,7 +68,7 @@ public:
 
         while(temp !=NULL){
             if(temp->courseID == courseId){
-                // cout<<"Course Found : "<<temp;
+                // cout<<"Course Found : "<<temp->courseID;
                 return temp;
             };
             temp=temp->nextCourse;
@@ -80,45 +80,45 @@ public:
 
     // * ADD NEW STUDENT IN COURSE
 
-    void addNewStudent(string studentId , int courseId){
+    void addNewStudent(string studentId, int courseId) {
         Student* newStudent = new Student(studentId);
-        if(searchCourses(courseId)){
-           Courses* existingCourse = searchCourses(courseId);
-            existingCourse->studentList=newStudent;
-            
-        if (studHead == NULL) {
-            studHead = studTail = newStudent;
-        } else{
-            studTail->nextStudent=newStudent;
-            studTail=newStudent;
+        Courses* existingCourse = searchCourses(courseId);
+    
+        if (existingCourse) {
+            if (existingCourse->studentList == NULL) {
+                existingCourse->studentList = newStudent; // First student
+            } else {
+                Student* temp = existingCourse->studentList;
+                while (temp->nextStudent != NULL) {
+                    temp = temp->nextStudent;
+                }
+                temp->nextStudent = newStudent; // Append at the end
+            }
         }
-        }
-
-    };
+    }
+    
 
     // * PRINT ALL STUDENT
 
-    void printStudent(int courseId){
-        if(searchCourses(courseId)){
-            Courses* exist = searchCourses(courseId);
-            Student* allStudent = exist->studentList;
-            Student* temp = studHead;
-            if(allStudent == NULL){
-                cout<<"No Student Yet";
-                return;
-            }else{
-                while(temp != NULL){
-                    cout<<temp->studentID<<"\n";
-
-                    temp=temp->nextStudent;
-                }
-            }
-        }else{
-            cout<<"No Course Exist";
+    void printStudent(int courseId) {
+        Courses* exist = searchCourses(courseId);
+        if (!exist) {
+            cout << "No Course Exist\n";
             return;
         }
-
-    };
+    
+        Student* temp = exist->studentList;
+        if (!temp) {
+            cout << "No Student Yet\n";
+            return;
+        }
+    
+        while (temp != NULL) {
+            cout << temp->studentID << "\n";
+            temp = temp->nextStudent;
+        }
+    }
+    
 
     // * DELETE COURSE
 
@@ -127,12 +127,25 @@ public:
             Courses* existCourse = searchCourses(courseId);
             Student* allStudent = existCourse->studentList;
             Student* temp  = studHead;
+            Courses* tempC=head;
             while(temp != NULL){
                 Student* prev = temp;
                 temp->nextStudent=NULL;
                 temp=temp->nextStudent;
                 delete prev;
             }
+
+            while(tempC->nextCourse->courseID != courseId){
+                tempC = tempC->nextCourse;
+            }
+
+            Courses* prevC = tempC->nextCourse;
+
+            tempC->nextCourse=tempC->nextCourse->nextCourse;
+
+            prevC->nextCourse = NULL;
+            delete prevC;
+
             return; 
         }else{
             cout<<"No Course Exist Recently";
@@ -142,10 +155,37 @@ public:
 
 
     // * DELETE STUDENT FROM A COURSE
-
-    void deleteStudent (){
-
+    void deleteStudentFromAllCourses(string studentId) {
+        Courses* course = head; // Start from the first course
+    
+        while (course != NULL) {
+            Student* curr = course->studentList;
+            Student* prev = NULL;
+    
+            while (curr != NULL) {
+                
+                if (curr->studentID == studentId) {  
+                    if (!prev) {  
+                        course->studentList = curr->nextStudent; // Update course's head
+                    } else {
+                        prev->nextStudent = curr->nextStudent;  // Update linking
+                    }
+    
+                    Student* temp = curr;
+                    curr = curr->nextStudent;
+                    delete temp;
+                } else {
+                    prev = curr;
+                    curr = curr->nextStudent;
+                }
+            }
+            course = course->nextCourse; 
+        }
+        cout << "Student " << studentId << " deleted from all courses!\n";
     }
+    
+    
+    
 
 };
 
@@ -156,14 +196,17 @@ int main() {
     uniLL.addNewCourse(352);
     uniLL.addNewCourse(353);  
 
-    uniLL.printAllCourses();  
+    
 
     uniLL.addNewStudent("B23110006007",351);
     uniLL.addNewStudent("B23110006008",351);
 
-    // uniLL.printStudent(351);
+    uniLL.deleteStudentFromAllCourses("B23110006007");
 
-    uniLL.deleteCourse(351);
+    uniLL.printStudent(351);
+    // uniLL.deleteCourse(352);
+    uniLL.printAllCourses();  
+
 
     return 0;
 }
